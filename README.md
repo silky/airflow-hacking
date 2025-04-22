@@ -4,7 +4,11 @@
 ## Before running
 
 ```
+# Make supporting folders
 mkdir -p ./logs ./plugins
+
+# Build the docker image (with custom Python packages)
+docker compose build
 ```
 
 ## Usage
