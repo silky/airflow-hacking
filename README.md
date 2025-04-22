@@ -3,7 +3,7 @@
 
 ## Before running
 
-```
+```shell
 # Make supporting folders
 mkdir -p ./logs ./plugins
 
@@ -13,7 +13,7 @@ docker compose build
 
 ## Usage
 
-```
+```shell
 docker compose up -d
 ```
 
