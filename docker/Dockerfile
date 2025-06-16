@@ -1,10 +1,16 @@
 from apache/airflow:2.10.5
 
-user root
-
 # * Install s2
 #
-# ** First, the dependencies
+# Notes:
+#
+#   - Fixed abseil version
+#   - Explicitly set CXX to 17
+#   - Use version 0.12 of s2
+#
+# ** First, the dependencies; which we need to do this as root.
+user root
+
 run apt update
 run apt install -y \
       libgflags-dev \
@@ -31,29 +37,26 @@ run cd abseil-cpp \
         .. \
       && cmake --build . --target install
 
+# ** Grab airflow now
+user airflow
+
 run git clone https://github.com/google/s2geometry.git
 run cd s2geometry \
       && git checkout v0.12.0
-      # && mkdir build \
-      # && cd build \
-      # && cmake \
-      #   -D CMAKE_CXX_STANDARD=17 \
-      #   -D BUILD_TESTS=OFF \
-      #   .. \
-      # && make \
-      # && make install
 
-run chown -R airflow s2geometry
-
-user airflow
+# ** Install it
 run cd s2geometry \
       && pip install build \
+      # Small hack to set cmake args
       && sed -i '23i "-DBUILD_TESTS=OFF", "-DCMAKE_CXX_STANDARD=17",' setup.py \
       && python -m build \
       && pip install "$(find dist -name *.whl)"
 
+# ** Check it works
 run python -c "import s2geometry as s2"
 
+
+# * Now, back to normal Airflow/Docker business
 # Install Python requirements
 copy requirements.txt /requirements.txt
 
