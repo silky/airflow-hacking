@@ -37,7 +37,7 @@ run cd abseil-cpp \
         .. \
       && cmake --build . --target install
 
-# ** Grab airflow now
+# ** Grab s2geometry now; run as the airflow user as we are pip-installing.
 user airflow
 
 run git clone https://github.com/google/s2geometry.git
@@ -53,11 +53,14 @@ run cd s2geometry \
       && pip install "$(find dist -name *.whl)"
 
 # ** Check it works
-run python -c "import s2geometry as s2"
+run python -c "import s2geometry"
 
 
 # * Now, back to normal Airflow/Docker business
+#
 # Install Python requirements
+#
+# Note: You should _not_ have `s2geometry` as an entry in this file.
 copy requirements.txt /requirements.txt
 
 run pip install --upgrade pip
