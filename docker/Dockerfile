@@ -53,7 +53,7 @@ run cd s2geometry \
       && pip install "$(find dist -name *.whl)"
 
 # ** Check it works
-run python -c "import s2geometry"
+run python -c "import s2geometry as s2; x = s2.S2Loop()"
 
 
 # * Now, back to normal Airflow/Docker business
